@@ -30,30 +30,32 @@ export function LoginPage({ participants, onLogin, hasDrawn }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-black flex items-center justify-center relative overflow-hidden p-4">
-      {/* Orbes flottants - background subtil */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-orange-600/5 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center relative overflow-hidden p-4">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-gradient-to-br from-red-500/30 via-orange-500/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-gradient-to-tl from-purple-500/30 via-pink-500/20 to-transparent rounded-full blur-3xl animate-pulse" style={{animationDelay: "1s"}}></div>
       </div>
 
       {/* Contenu principal */}
       <div className="relative z-10 w-full max-w-md">
-        {/* En-tête minimaliste */}
+        {/* En-tête Premium */}
         <div className="text-center mb-12">
-          <div className="inline-block mb-6 px-4 py-2 rounded-full backdrop-blur-xl bg-white/5 border border-white/10">
-            <p className="text-xs uppercase tracking-widest text-orange-400">Tirage au sort</p>
+          <div className="inline-block mb-6 px-6 py-2 rounded-full backdrop-blur-xl bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/40">
+            <p className="text-xs uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400 font-bold">
+              🔐 Authentification Sécurisée
+            </p>
           </div>
-          <h1 className="text-5xl font-bold text-white mb-2 tracking-tight">
-            Foire House
+          <h1 className="text-6xl font-black text-white mb-3 tracking-tighter">
+            Maison de Foire
           </h1>
-          <p className="text-white/60 font-light">
-            {hasDrawn ? "Authentification sécurisée" : "En attente du tirage"}
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400 font-light">
+            {hasDrawn ? "Découvrez votre destinataire" : "En attente du tirage..."}
           </p>
         </div>
 
         {/* Formulaire de connexion */}
-        <form onSubmit={handleLogin} className="backdrop-blur-xl bg-white/5 rounded-xl p-8 border border-white/10">
+        <form onSubmit={handleLogin} className="backdrop-blur-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/0 rounded-2xl p-8 border border-white/20 shadow-2xl">
           {/* Message d'attente si pas de tirage */}
           {!hasDrawn && (
             <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
@@ -65,8 +67,8 @@ export function LoginPage({ participants, onLogin, hasDrawn }) {
 
           {/* Sélection du nom */}
           <div className="mb-6">
-            <label className="block text-white font-semibold mb-3 text-sm">
-              Sélectionnez votre nom
+            <label className="block text-white font-bold mb-3 text-sm uppercase tracking-wider">
+              👤 Votre Nom
             </label>
             <select
               value={selectedName}
@@ -75,11 +77,11 @@ export function LoginPage({ participants, onLogin, hasDrawn }) {
                 setError("");
               }}
               disabled={!hasDrawn}
-              className="w-full px-4 py-3 bg-white/5 text-white border border-white/20 rounded-lg font-medium focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="w-full px-4 py-3 bg-gradient-to-br from-white/10 to-white/5 text-white border border-white/30 rounded-lg font-medium focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition"
             >
-              <option value="" className="bg-slate-900">-- Choisissez votre nom --</option>
+              <option value="" className="bg-gray-900">👉 Choisissez votre nom...</option>
               {participants.map((participant) => (
-                <option key={participant} value={participant} className="bg-slate-900 text-white">
+                <option key={participant} value={participant} className="bg-gray-900 text-white">
                   {participant}
                 </option>
               ))}
@@ -87,11 +89,11 @@ export function LoginPage({ participants, onLogin, hasDrawn }) {
           </div>
 
           {/* Mot de passe */}
-          <div className="mb-6">
-            <label className="block text-white font-semibold mb-3 text-sm">
-              Mot de passe
+          <div className="mb-8">
+            <label className="block text-white font-bold mb-3 text-sm uppercase tracking-wider">
+              🔑 Mot de Passe
             </label>
-            <div className="relative">
+            <div className="relative group">
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -100,15 +102,15 @@ export function LoginPage({ participants, onLogin, hasDrawn }) {
                   setError("");
                 }}
                 disabled={!hasDrawn}
-                placeholder="Entrez votre mot de passe"
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white font-medium focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition placeholder-white/40"
+                placeholder="Entrez votre mot de passe..."
+                className="w-full px-4 py-3 bg-gradient-to-br from-white/10 to-white/5 border border-white/30 rounded-lg text-white font-medium focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition placeholder-white/40"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition text-lg"
               >
-                {showPassword ? "●●" : "○○"}
+                {showPassword ? "👁️" : "👁️‍🗨️"}
               </button>
             </div>
           </div>
@@ -126,9 +128,9 @@ export function LoginPage({ participants, onLogin, hasDrawn }) {
           <button
             type="submit"
             disabled={!hasDrawn}
-            className="w-full py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 disabled:from-white/10 disabled:to-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition"
+            className="w-full py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 disabled:from-white/10 disabled:to-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-lg transition transform hover:scale-105 active:scale-95 shadow-lg uppercase tracking-wider"
           >
-            Se Connecter
+            🚀 Se Connecter
           </button>
         </form>
 

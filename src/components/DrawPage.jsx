@@ -439,33 +439,50 @@ export function DrawPage({
                 })}
               </div>
 
-              {/* Résultat - SIMPLE & ELEGANT */}
+              {/* Résultat - SPECTACULAIRE */}
               {showResult && selectedParticipant && (
-                <div className="relative mb-8 overflow-hidden rounded-xl"
+                <div className="relative mb-8 overflow-hidden rounded-2xl"
                   style={{
-                    animation: "result-scale 0.5s ease-out"
+                    animation: "result-scale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)"
                   }}
                 >
-                  {/* Background avec gradient subtil */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-600/40 to-red-600/30"></div>
-                  <div className="absolute inset-0 border-2 border-orange-400/50 rounded-xl"></div>
+                  {/* Animated gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-red-600 to-pink-600 opacity-90"></div>
+
+                  {/* Animated light rays */}
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
+                    backgroundSize: "60px 60px",
+                    animation: "shimmer-bg 3s linear infinite"
+                  }}/>
+
+                  <div className="absolute inset-0 border-3 border-yellow-300/40 rounded-2xl"></div>
 
                   {/* Content */}
-                  <div className="relative z-10 backdrop-blur-sm bg-black/40 p-10 text-center">
-                    <p className="text-white/80 text-sm uppercase tracking-widest mb-6 font-semibold">Résultat du tirage</p>
+                  <div className="relative z-10 backdrop-blur-sm bg-black/30 p-12 text-center">
+                    <div className="mb-6 inline-block px-6 py-2 rounded-full bg-white/10 border border-white/30">
+                      <p className="text-yellow-200 text-xs uppercase tracking-widest font-black">✨ RÉSULTAT FINAL ✨</p>
+                    </div>
 
-                    <h3 className="text-3xl font-bold text-white mb-8">
+                    <h3 className="text-5xl font-black text-white mb-10 tracking-tight drop-shadow-lg">
                       {selectedParticipant}
                     </h3>
 
-                    <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-8 mb-6">
-                      <p className="text-white/90 text-sm mb-4 uppercase tracking-widest font-semibold">Doit offrir un cadeau à</p>
-                      <div className="text-6xl font-black text-white drop-shadow-lg">
+                    <div className="bg-gradient-to-b from-yellow-400 to-orange-500 rounded-2xl p-10 mb-8 transform hover:scale-105 transition shadow-2xl">
+                      <p className="text-black/80 text-sm mb-6 uppercase tracking-widest font-black">Doit offrir un cadeau à</p>
+                      <div className="text-7xl font-black text-white drop-shadow-2xl mb-3" style={{
+                        animation: "bounce-big 2s ease-in-out infinite"
+                      }}>
                         {getResultForParticipant(selectedParticipant)}
+                      </div>
+                      <div className="inline-block px-4 py-2 bg-black/20 rounded-lg">
+                        <p className="text-white font-black text-sm">🎁 LE DESTINATAIRE 🎁</p>
                       </div>
                     </div>
 
-                    <p className="text-white/60 text-xs uppercase tracking-widest">🔒 Résultat Confidentiel</p>
+                    <p className="text-white/70 text-xs uppercase tracking-widest font-bold">
+                      🔒 RÉSULTAT 100% CONFIDENTIEL 🔒
+                    </p>
                   </div>
                 </div>
               )}
