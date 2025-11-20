@@ -14,6 +14,9 @@ export function DrawPage({
   const navigate = useNavigate();
   const [selectedParticipant, setSelectedParticipant] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [drawLocked, setDrawLocked] = useState(() => {
+    return localStorage.getItem("secret_santa_draw_locked") === "true";
+  });
 
   const confettiStyle = `
     @keyframes fall {
@@ -181,9 +184,13 @@ export function DrawPage({
         "Attention ! Le tirage au sort secret va être lancé.\nCette action ne peut pas être annulée.\n\nÊtes-vous sûr ?"
       )
     ) {
+      // Sauvegarder un flag pour bloquer les futurs tirages
+      localStorage.setItem("secret_santa_draw_locked", "true");
       onPerformDraw();
       setShowResult(false);
       setSelectedParticipant(null);
+      // Recharger la page pour appliquer le verrouillage
+      window.location.reload();
     }
   };
 
@@ -352,9 +359,14 @@ export function DrawPage({
               <div className="flex gap-4 flex-wrap">
                 <button
                   onClick={handlePerformDraw}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold rounded-lg transition-all transform hover:scale-105 active:scale-95 shadow-lg"
+                  disabled={drawLocked}
+                  className={`flex-1 px-6 py-3 rounded-lg transition-all transform font-bold ${
+                    drawLocked
+                      ? "bg-gray-600 text-gray-400 cursor-not-allowed opacity-50"
+                      : "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white hover:scale-105 active:scale-95 shadow-lg"
+                  }`}
                 >
-                  🎲 Lancer le tirage
+                  {drawLocked ? "✓ Tirage Verrouillé" : "🎲 Lancer le tirage"}
                 </button>
                 <button
                   onClick={() => navigate("/")}
