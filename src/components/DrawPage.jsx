@@ -392,21 +392,21 @@ export function DrawPage({
                 </p>
               </div>
 
-              {/* Grille des participants - SIMPLE & ELEGANT */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+              {/* Grille des participants - RESPONSIVE */}
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4 mb-6 lg:mb-8">
                 {participants.map((participant, index) => {
                   const isCurrentUser = participant.toLowerCase() === currentUser?.toLowerCase();
                   const isDisabled = isUserLoggedIn && !isCurrentUser;
                   const colors = [
-                    'from-rose-500 to-pink-400',
-                    'from-amber-500 to-orange-400',
-                    'from-lime-500 to-green-400',
-                    'from-cyan-500 to-blue-400',
-                    'from-violet-500 to-purple-400',
-                    'from-fuchsia-500 to-pink-400',
-                    'from-orange-500 to-yellow-400',
-                    'from-red-500 to-orange-400',
-                    'from-indigo-500 to-purple-400',
+                    'from-rose-600 to-pink-500',
+                    'from-orange-600 to-yellow-500',
+                    'from-emerald-600 to-green-500',
+                    'from-cyan-600 to-blue-500',
+                    'from-violet-600 to-purple-500',
+                    'from-fuchsia-600 to-pink-500',
+                    'from-amber-600 to-orange-500',
+                    'from-red-600 to-rose-500',
+                    'from-indigo-600 to-purple-500',
                   ];
                   const color = colors[index % colors.length];
 
@@ -415,33 +415,39 @@ export function DrawPage({
                       key={participant}
                       onClick={() => handleRevealResult(participant)}
                       disabled={isDisabled}
-                      className={`relative overflow-hidden rounded-lg transition-all duration-200 transform ${
+                      className={`relative overflow-hidden rounded-lg lg:rounded-xl transition-all duration-300 transform shadow-lg ${
                         isDisabled
                           ? "opacity-40 cursor-not-allowed"
                           : selectedParticipant === participant
-                            ? "scale-105 ring-2 ring-orange-300"
-                            : "hover:scale-105 hover:shadow-lg"
+                            ? "scale-105 ring-2 ring-yellow-300"
+                            : "hover:scale-105 hover:shadow-xl active:scale-95"
                       }`}
                     >
                       {/* Gradient Background */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-90`}></div>
+                      <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-95`}></div>
+
+                      {/* Shine effect on hover */}
+                      <div className="absolute inset-0 opacity-0 hover:opacity-20 transition bg-gradient-to-r from-white via-transparent to-transparent rounded-lg lg:rounded-xl"/>
 
                       {/* Content */}
-                      <div className="relative z-10 p-6 text-center h-32 flex flex-col items-center justify-center gap-2">
-                        <div className="text-5xl drop-shadow-md">{participant.charAt(0).toUpperCase()}</div>
-                        <div className="text-white font-bold text-lg leading-tight">{participant}</div>
+                      <div className="relative z-10 p-3 lg:p-6 text-center min-h-24 lg:h-32 flex flex-col items-center justify-center gap-1 lg:gap-2">
+                        <div className="text-3xl lg:text-5xl font-black drop-shadow-lg">{participant.charAt(0).toUpperCase()}</div>
+                        <div className="text-white font-bold text-xs lg:text-lg drop-shadow-md line-clamp-2 max-w-full">{participant}</div>
                         {isCurrentUser && isUserLoggedIn && (
-                          <div className="text-yellow-200 text-xs font-bold">✨ C'EST TOI ✨</div>
+                          <div className="text-yellow-200 text-xs font-black mt-1">✨ TOI ✨</div>
                         )}
                       </div>
+
+                      {/* Bottom accent */}
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 lg:h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent hover:via-white/60 transition"></div>
                     </button>
                   );
                 })}
               </div>
 
-              {/* Résultat - SPECTACULAIRE */}
+              {/* Résultat - SPECTACULAIRE & RESPONSIVE */}
               {showResult && selectedParticipant && (
-                <div className="relative mb-8 overflow-hidden rounded-2xl"
+                <div className="relative mb-6 lg:mb-8 overflow-hidden rounded-xl lg:rounded-2xl"
                   style={{
                     animation: "result-scale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)"
                   }}
@@ -456,32 +462,32 @@ export function DrawPage({
                     animation: "shimmer-bg 3s linear infinite"
                   }}/>
 
-                  <div className="absolute inset-0 border-3 border-yellow-300/40 rounded-2xl"></div>
+                  <div className="absolute inset-0 border-2 lg:border-3 border-yellow-300/40 rounded-xl lg:rounded-2xl"></div>
 
                   {/* Content */}
-                  <div className="relative z-10 backdrop-blur-sm bg-black/30 p-12 text-center">
-                    <div className="mb-6 inline-block px-6 py-2 rounded-full bg-white/10 border border-white/30">
-                      <p className="text-yellow-200 text-xs uppercase tracking-widest font-black">✨ RÉSULTAT FINAL ✨</p>
+                  <div className="relative z-10 backdrop-blur-sm bg-black/30 p-6 lg:p-12 text-center">
+                    <div className="mb-4 lg:mb-6 inline-block px-3 lg:px-6 py-1 lg:py-2 rounded-full bg-white/10 border border-white/30">
+                      <p className="text-yellow-200 text-xs uppercase tracking-widest font-black">✨ RÉSULTAT ✨</p>
                     </div>
 
-                    <h3 className="text-5xl font-black text-white mb-10 tracking-tight drop-shadow-lg">
+                    <h3 className="text-2xl lg:text-5xl font-black text-white mb-4 lg:mb-10 tracking-tight drop-shadow-lg line-clamp-2">
                       {selectedParticipant}
                     </h3>
 
-                    <div className="bg-gradient-to-b from-yellow-400 to-orange-500 rounded-2xl p-10 mb-8 transform hover:scale-105 transition shadow-2xl">
-                      <p className="text-black/80 text-sm mb-6 uppercase tracking-widest font-black">Doit offrir un cadeau à</p>
-                      <div className="text-7xl font-black text-white drop-shadow-2xl mb-3" style={{
+                    <div className="bg-gradient-to-b from-yellow-400 to-orange-500 rounded-xl lg:rounded-2xl p-5 lg:p-10 mb-6 lg:mb-8 transform hover:scale-105 transition shadow-2xl">
+                      <p className="text-black/80 text-xs lg:text-sm mb-3 lg:mb-6 uppercase tracking-widest font-black">Doit offrir un cadeau à</p>
+                      <div className="text-4xl lg:text-7xl font-black text-white drop-shadow-2xl mb-2 lg:mb-3 line-clamp-2" style={{
                         animation: "bounce-big 2s ease-in-out infinite"
                       }}>
                         {getResultForParticipant(selectedParticipant)}
                       </div>
-                      <div className="inline-block px-4 py-2 bg-black/20 rounded-lg">
-                        <p className="text-white font-black text-sm">🎁 LE DESTINATAIRE 🎁</p>
+                      <div className="inline-block px-2 lg:px-4 py-1 lg:py-2 bg-black/20 rounded-lg mt-2 lg:mt-0">
+                        <p className="text-white font-black text-xs lg:text-sm">🎁 LE DESTINATAIRE 🎁</p>
                       </div>
                     </div>
 
-                    <p className="text-white/70 text-xs uppercase tracking-widest font-bold">
-                      🔒 RÉSULTAT 100% CONFIDENTIEL 🔒
+                    <p className="text-white/70 text-xs uppercase tracking-widest font-bold leading-relaxed">
+                      🔒 RÉSULTAT 100%<br className="lg:hidden" /> CONFIDENTIEL 🔒
                     </p>
                   </div>
                 </div>
