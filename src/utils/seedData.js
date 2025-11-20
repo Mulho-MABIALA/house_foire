@@ -28,6 +28,19 @@ export const PARTICIPANT_PASSWORDS = {
   "Marcelle": "6789",
 };
 
+// Tirage prédéfini - FIXÉ dans le code
+export const PREDEFINED_DRAW = [
+  { from: "Zéna", to: "Marcelle" },
+  { from: "Erichelle", to: "Ibrahim" },
+  { from: "Daisy", to: "orlane" },
+  { from: "Ibrahim", to: "Sarah" },
+  { from: "yves", to: "Denise" },
+  { from: "orlane", to: "Zéna" },
+  { from: "Sarah", to: "Erichelle" },
+  { from: "Denise", to: "Daisy" },
+  { from: "Marcelle", to: "yves" },
+];
+
 /**
  * Initialise localStorage avec les participants de démonstration
  */

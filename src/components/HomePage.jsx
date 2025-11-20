@@ -1,154 +1,141 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { SEED_PARTICIPANTS } from "../utils/seedData";
 
-export function HomePage({ participants, onAddParticipant, onAddMultiple }) {
-  const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState("");
-  const [error, setError] = useState("");
+export function HomePage({ participants, onPerformDraw }) {
+  const [isDrawing, setIsDrawing] = useState(false);
 
-  const handleAddParticipant = () => {
-    setError("");
-    if (!inputValue.trim()) {
-      setError("Le nom ne peut pas être vide");
-      return;
-    }
+  const handleLaunchDraw = () => {
+    setIsDrawing(true);
 
-    if (onAddParticipant(inputValue)) {
-      setInputValue("");
-    } else {
-      setError(
-        "Ce nom existe déjà ou ne peut pas être ajouté. Veuillez vérifier."
-      );
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleAddParticipant();
-    }
-  };
-
-  const handleLoadAllParticipants = () => {
-    if (participants.length > 0) {
+    // Simulation du tirage avec animation
+    setTimeout(() => {
       if (
-        !window.confirm(
-          "Cela va remplacer la liste actuelle des participants. Êtes-vous sûr ?"
+        window.confirm(
+          "⚠️ Attention! Le tirage au sort va être lancé.\nCette action est IRRÉVERSIBLE.\n\nÊtes-vous sûr de continuer ?"
         )
       ) {
-        return;
+        localStorage.setItem("secret_santa_draw_locked", "true");
+        onPerformDraw();
+        // React gère automatiquement l'affichage de la page de connexion
+      } else {
+        setIsDrawing(false);
       }
-    }
-    const added = onAddMultiple(SEED_PARTICIPANTS);
-    setError("");
-    if (added > 0) {
-      setInputValue("");
-    }
+    }, 2000);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-600 via-red-500 to-green-600 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        {/* En-tête festif */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-white mb-2">
-            🎄 Secret Santa 🎄
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-black py-8 px-4 relative overflow-hidden">
+      {/* Orbes subtils en arrière-plan */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-orange-600/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="max-w-3xl mx-auto relative z-10">
+        {/* En-tête */}
+        <div className="text-center mb-16">
+          <h1 className="text-6xl md:text-7xl font-bold text-white mb-3 tracking-tight">
+            Foire House
           </h1>
-          <p className="text-xl text-red-50">Tirage au Sort Secret pour Noël</p>
+          <p className="text-white/60 text-lg font-light tracking-wide">
+            Tirage au Sort Secret
+          </p>
         </div>
 
         {/* Boîte principale */}
-        <div className="bg-white rounded-lg shadow-2xl p-8 mb-6">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Ajouter les participants
-            </h2>
-            <div className="space-y-3">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => {
-                    setInputValue(e.target.value);
-                    setError("");
-                  }}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Entrez le nom du participant..."
-                  className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition"
-                />
-                <button
-                  onClick={handleAddParticipant}
-                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-lg hover:from-red-600 hover:to-red-700 transition shadow-md"
-                >
-                  Ajouter
-                </button>
-              </div>
-
-              <button
-                onClick={handleLoadAllParticipants}
-                className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-lg hover:from-purple-600 hover:to-pink-600 transition shadow-md"
-              >
-                ⭐ Charger tous les participants
-              </button>
-            </div>
-            {error && <p className="text-red-500 font-semibold">{error}</p>}
-          </div>
-
+        <div className="backdrop-blur-xl bg-white/5 rounded-xl p-10 mb-8 border border-white/10">
           {/* Liste des participants */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">
-              Participants ({participants.length})
-            </h3>
-            {participants.length === 0 ? (
-              <p className="text-gray-500 italic">
-                Aucun participant pour le moment...
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-white mb-2">
+                👥 Participants
+              </h2>
+              <p className="text-white/60 text-sm">
+                {participants.length} personnes vont participer au tirage
               </p>
-            ) : (
-              <ul className="space-y-2">
-                {participants.map((participant) => (
-                  <li
+            </div>
+
+            {/* Grille des participants */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+              {participants.map((participant, index) => {
+                const colors = [
+                  'from-rose-500 to-pink-400',
+                  'from-amber-500 to-orange-400',
+                  'from-lime-500 to-green-400',
+                  'from-cyan-500 to-blue-400',
+                  'from-violet-500 to-purple-400',
+                  'from-fuchsia-500 to-pink-400',
+                  'from-orange-500 to-yellow-400',
+                  'from-red-500 to-orange-400',
+                  'from-indigo-500 to-purple-400',
+                ];
+                const color = colors[index % colors.length];
+
+                return (
+                  <div
                     key={participant}
-                    className="flex items-center justify-between bg-gradient-to-r from-green-50 to-red-50 p-3 rounded-lg border-l-4 border-green-500"
+                    className={`bg-gradient-to-br ${color} rounded-lg p-6 text-center transform transition-all hover:scale-105`}
                   >
-                    <span className="text-lg font-semibold text-gray-800">
-                      🎁 {participant}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
+                    <div className="text-4xl font-bold text-white mb-2">
+                      {participant.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="text-white font-semibold text-sm">
+                      {participant}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Boutons de navigation */}
-          <div className="flex gap-4 flex-wrap">
+          {/* Zone du bouton tirage */}
+          <div className="text-center">
+            <div className="mb-8">
+              <div className="inline-block text-6xl mb-4" style={{
+                animation: "bounce 1.5s ease-in-out infinite"
+              }}>
+                🎁
+              </div>
+            </div>
+
             <button
-              onClick={() => navigate("/admin")}
-              disabled={participants.length === 0}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 transition shadow-md"
+              onClick={handleLaunchDraw}
+              disabled={participants.length < 2 || isDrawing}
+              className={`relative px-10 py-4 rounded-lg transition-all transform font-bold text-lg ${
+                participants.length < 2 || isDrawing
+                  ? "bg-gray-600 text-gray-400 cursor-not-allowed opacity-50"
+                  : "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white hover:scale-105 active:scale-95 shadow-lg"
+              }`}
             >
-              🔧 Gérer les participants
+              {isDrawing ? "⏳ Tirage en cours..." : "🎲 Lancer le tirage"}
             </button>
-            <button
-              onClick={() => navigate("/draw")}
-              disabled={participants.length < 2}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-bold rounded-lg hover:from-yellow-600 hover:to-yellow-700 disabled:from-gray-400 disabled:to-gray-500 transition shadow-md"
-            >
-              🎲 Lancer le tirage
-            </button>
+
+            {participants.length < 2 && (
+              <p className="text-white/60 text-sm mt-4">
+                Au moins 2 participants sont nécessaires
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Info */}
-        <div className="bg-white bg-opacity-90 rounded-lg p-4 text-center">
-          <p className="text-gray-700">
-            {participants.length === 0
-              ? "Commencez par ajouter les participants..."
-              : participants.length === 1
-                ? "Ajoutez au moins 2 participants pour faire le tirage"
-                : `Prêt ! ${participants.length} participants enregistrés`}
+        {/* Info footer */}
+        <div className="text-center">
+          <p className="text-white/40 text-xs uppercase tracking-widest">
+            Foire House — Tirage au Sort Secret
           </p>
         </div>
       </div>
+
+      {/* Animations CSS */}
+      <style>{`
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-30px);
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { generateDraw } from "../services/drawService";
-import { PARTICIPANT_PASSWORDS, SEED_PARTICIPANTS } from "../utils/seedData";
+import { PARTICIPANT_PASSWORDS, SEED_PARTICIPANTS, PREDEFINED_DRAW } from "../utils/seedData";
 
 const STORAGE_KEY = "secret_santa_data";
 const AUTH_KEY = "secret_santa_auth";
@@ -17,47 +16,29 @@ export function useSecretSantaState() {
   // Charger les données depuis localStorage au démarrage
   useEffect(() => {
     const savedData = localStorage.getItem(STORAGE_KEY);
+
     if (savedData) {
+      // Si des données existent (tirage déjà fait), les charger
       try {
         const data = JSON.parse(savedData);
-        let loadedParticipants = data.participants || [];
-
-        // Valider que tous les participants existent dans PARTICIPANT_PASSWORDS
-        const validParticipants = loadedParticipants.filter(
-          (p) => PARTICIPANT_PASSWORDS[p] !== undefined
-        );
-
-        // Si des participants ont été filtrés (données obsolètes), nettoyer
-        if (validParticipants.length !== loadedParticipants.length) {
-          console.log("🧹 Nettoyage des données obsolètes détecté");
-          // Réinitialiser complètement si données corrompues
-          localStorage.removeItem(STORAGE_KEY);
-          localStorage.removeItem(AUTH_KEY);
-          setParticipants([]);
-          setDraws(null);
-          setHasDrawn(false);
-          setCurrentUser(null);
-          return;
-        }
-
-        setParticipants(validParticipants);
+        setParticipants(data.participants || SEED_PARTICIPANTS);
         setDraws(data.draws || null);
         setHasDrawn(data.hasDrawn || false);
       } catch (error) {
-        console.error("Erreur lors du chargement des données:", error);
+        console.error("Erreur lors du chargement:", error);
+        setParticipants(SEED_PARTICIPANTS);
       }
+    } else {
+      // Sinon, commencer frais avec les participants par défaut
+      setParticipants(SEED_PARTICIPANTS);
+      setDraws(null);
+      setHasDrawn(false);
     }
 
-    // Charger l'utilisateur connecté
+    // Charger l'utilisateur connecté s'il existe
     const savedAuth = localStorage.getItem(AUTH_KEY);
-    if (savedAuth) {
-      // Valider que l'utilisateur existe
-      if (PARTICIPANT_PASSWORDS[savedAuth]) {
-        setCurrentUser(savedAuth);
-      } else {
-        // Utilisateur invalide, déconnecter
-        localStorage.removeItem(AUTH_KEY);
-      }
+    if (savedAuth && PARTICIPANT_PASSWORDS[savedAuth]) {
+      setCurrentUser(savedAuth);
     }
   }, []);
 
@@ -73,32 +54,12 @@ export function useSecretSantaState() {
     );
   };
 
-  // Ajouter un participant
-  const addParticipant = (name) => {
-    if (!name.trim()) return false;
-    if (participants.some((p) => p.toLowerCase() === name.toLowerCase())) {
-      return false; // Doublon
-    }
-    const newParticipants = [...participants, name.trim()];
-    setParticipants(newParticipants);
-    saveToStorage(newParticipants, draws, hasDrawn);
-    return true;
-  };
 
-  // Supprimer un participant
-  const removeParticipant = (name) => {
-    const newParticipants = participants.filter((p) => p !== name);
-    setParticipants(newParticipants);
-    // Réinitialiser le tirage si on supprime quelqu'un
-    saveToStorage(newParticipants, null, false);
-    setDraws(null);
-    setHasDrawn(false);
-  };
-
-  // Effectuer le tirage au sort
+  // Effectuer le tirage au sort (utilise le tirage PRÉDÉFINI)
   const performDraw = () => {
     if (participants.length < 2) return false;
-    const newDraws = generateDraw(participants);
+    // Utiliser le tirage prédéfini du code
+    const newDraws = PREDEFINED_DRAW;
     if (newDraws) {
       setDraws(newDraws);
       setHasDrawn(true);
@@ -121,31 +82,6 @@ export function useSecretSantaState() {
     setDraws(null);
     setHasDrawn(false);
     saveToStorage(participants, null, false);
-  };
-
-  // Ajouter plusieurs participants à la fois
-  const addMultipleParticipants = (names) => {
-    let newParticipants = [...participants];
-    let added = 0;
-
-    for (const name of names) {
-      if (
-        name.trim() &&
-        !newParticipants.some((p) => p.toLowerCase() === name.toLowerCase())
-      ) {
-        newParticipants.push(name.trim());
-        added++;
-      }
-    }
-
-    if (added > 0) {
-      setParticipants(newParticipants);
-      saveToStorage(newParticipants, null, false);
-      setDraws(null);
-      setHasDrawn(false);
-    }
-
-    return added;
   };
 
   // Authentifier un participant
@@ -183,12 +119,9 @@ export function useSecretSantaState() {
     draws,
     hasDrawn,
     currentUser,
-    addParticipant,
-    removeParticipant,
     performDraw,
     resetAll,
     resetDraw,
-    addMultipleParticipants,
     login,
     logout,
     getCurrentUserDraw,

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { HomePage } from "./components/HomePage";
-import { AdminPanel } from "./components/AdminPanel";
 import { DrawPage } from "./components/DrawPage";
 import { LoadingPage } from "./components/LoadingPage";
 import { LoginPage } from "./components/LoginPage";
@@ -59,41 +58,10 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              participants={state.participants}
-              onAddParticipant={state.addParticipant}
-              onAddMultiple={state.addMultipleParticipants}
-            />
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <AdminPanel
-              participants={state.participants}
-              onRemoveParticipant={state.removeParticipant}
-            />
-          }
-        />
-        <Route
-          path="/draw"
-          element={
-            <DrawPage
-              participants={state.participants}
-              draws={state.draws}
-              hasDrawn={state.hasDrawn}
-              onPerformDraw={state.performDraw}
-              onResetDraw={state.resetDraw}
-            />
-          }
-        />
-      </Routes>
-    </div>
+    <HomePage
+      participants={state.participants}
+      onPerformDraw={state.performDraw}
+    />
   );
 }
 
