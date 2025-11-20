@@ -297,20 +297,20 @@ export function DrawPage({
 
       <div className="max-w-3xl mx-auto relative z-10">
         {/* En-tête */}
-        <div className="text-center mb-10">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-2">
-            Foire House
+        <div className="text-center mb-8 lg:mb-10">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-2">
+            Maison de Foire
           </h1>
-          <p className="text-white/60 text-sm">Tirage au Sort Secret</p>
+          <p className="text-white/60 text-xs sm:text-sm">Tirage au Sort Secret</p>
 
           {isUserLoggedIn && (
-            <div className="mt-6 inline-block rounded-lg bg-orange-600/20 border border-orange-500/40 px-6 py-3 backdrop-blur-sm">
-              <p className="text-white/90 text-sm">
+            <div className="mt-4 lg:mt-6 inline-block rounded-lg bg-gradient-to-r from-orange-600/30 to-red-600/30 border border-orange-500/40 px-4 lg:px-6 py-2 lg:py-3 backdrop-blur-sm">
+              <p className="text-white/90 text-xs lg:text-sm">
                 Connecté : <span className="text-orange-300 font-bold">{currentUser}</span>
               </p>
               <button
                 onClick={handleLogout}
-                className="mt-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white font-light rounded text-xs uppercase"
+                className="mt-2 px-2 lg:px-3 py-1 lg:py-1.5 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white font-light rounded text-xs uppercase transition"
               >
                 Déconnecter
               </button>
@@ -319,7 +319,7 @@ export function DrawPage({
         </div>
 
         {/* Boîte principale */}
-        <div className="backdrop-blur-xl bg-white/5 rounded-xl p-8 mb-6 border border-white/10">
+        <div className="backdrop-blur-xl bg-white/5 rounded-xl p-6 lg:p-8 mb-6 border border-white/10">
           {!hasDrawn ? (
             <>
               <div className="mb-10 text-center">
